@@ -6,6 +6,16 @@ The HPS is responsible for executing the game logic features of this application
 
 Audio output is configured using an I2C line connected to the FPGA and HPS, although the HPS only is responsible for the actual configuration. The output is set to operate in 16-bit I2S mode at 48 kHz so that it is prepared for audio input from the FPGA over I2S. The audio codec functions in slave mode, allowing the clock cycles to be set by the FPGA through its VLSI logic. Game progress and feedback such as current sequence length is displayed on the hex display. 
 
+<h2>To Execute:</h2>
+
+1. Clone the repository 
+
+2. Navigate to 'audioGame' directory
+ 
+3. Run CMake by running 'make'
+ 
+4. Executable will be in /bin/, run './bin/audioGame'
+
 <h2>System Design</h2>
 <img width="485" height="435" alt="image" src="https://github.com/user-attachments/assets/b387ebf9-22d4-4af1-9e2c-38ee7cc6d220" />
 
