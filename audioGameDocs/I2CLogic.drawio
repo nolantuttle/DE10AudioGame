@@ -1,0 +1,55 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36" version="28.2.7">
+  <diagram name="Page-1" id="Tg_AGn3A6to_C-b5FgGy">
+    <mxGraphModel dx="1426" dy="715" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="71OtgoOJQYiL-41YIhhR-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fillColor=#fad9d5;strokeColor=#ae4132;" edge="1" parent="1" source="71OtgoOJQYiL-41YIhhR-2" target="71OtgoOJQYiL-41YIhhR-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="71OtgoOJQYiL-41YIhhR-2" value="Start" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.start_1;whiteSpace=wrap;fillColor=#fad9d5;strokeColor=#ae4132;" vertex="1" parent="1">
+          <mxGeometry x="200" y="60" width="80" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="71OtgoOJQYiL-41YIhhR-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fillColor=#fad9d5;strokeColor=#ae4132;" edge="1" parent="1" source="71OtgoOJQYiL-41YIhhR-3" target="71OtgoOJQYiL-41YIhhR-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="71OtgoOJQYiL-41YIhhR-3" value="Reset Audio Codec" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;fillColor=#fad9d5;strokeColor=#ae4132;" vertex="1" parent="1">
+          <mxGeometry x="200" y="400" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="71OtgoOJQYiL-41YIhhR-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fillColor=#fad9d5;strokeColor=#ae4132;" edge="1" parent="1" source="71OtgoOJQYiL-41YIhhR-4" target="71OtgoOJQYiL-41YIhhR-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="71OtgoOJQYiL-41YIhhR-4" value="Set I&lt;sup&gt;2&lt;/sup&gt;C switch so HPS can configure Audio Codec" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;fillColor=#fad9d5;strokeColor=#ae4132;" vertex="1" parent="1">
+          <mxGeometry x="200" y="280" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="71OtgoOJQYiL-41YIhhR-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fillColor=#fad9d5;strokeColor=#ae4132;" edge="1" parent="1" source="71OtgoOJQYiL-41YIhhR-5" target="71OtgoOJQYiL-41YIhhR-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="71OtgoOJQYiL-41YIhhR-5" value="Set sampling rate to 48 kHz" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;fillColor=#fad9d5;strokeColor=#ae4132;" vertex="1" parent="1">
+          <mxGeometry x="320" y="400" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="71OtgoOJQYiL-41YIhhR-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;fillColor=#fad9d5;strokeColor=#ae4132;" edge="1" parent="1" source="71OtgoOJQYiL-41YIhhR-6" target="71OtgoOJQYiL-41YIhhR-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="71OtgoOJQYiL-41YIhhR-6" value="Set audio gain for digital to audio conversion" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;fillColor=#fad9d5;strokeColor=#ae4132;" vertex="1" parent="1">
+          <mxGeometry x="440" y="400" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="71OtgoOJQYiL-41YIhhR-7" value="Send I&lt;sup&gt;2&lt;/sup&gt;S audio samples using FPGA" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;fillColor=#fad9d5;strokeColor=#ae4132;" vertex="1" parent="1">
+          <mxGeometry x="440" y="280" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="71OtgoOJQYiL-41YIhhR-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fillColor=#fad9d5;strokeColor=#ae4132;" edge="1" parent="1" source="71OtgoOJQYiL-41YIhhR-8" target="71OtgoOJQYiL-41YIhhR-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="71OtgoOJQYiL-41YIhhR-8" value="Initialize I&lt;sup&gt;2&lt;/sup&gt;C Protocol" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;fillColor=#fad9d5;strokeColor=#ae4132;" vertex="1" parent="1">
+          <mxGeometry x="200" y="160" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="71OtgoOJQYiL-41YIhhR-15" value="End" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.terminator;whiteSpace=wrap;fillColor=#fad9d5;strokeColor=#ae4132;" vertex="1" parent="1">
+          <mxGeometry x="430" y="170" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="71OtgoOJQYiL-41YIhhR-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;fillColor=#fad9d5;strokeColor=#ae4132;" edge="1" parent="1" source="71OtgoOJQYiL-41YIhhR-7" target="71OtgoOJQYiL-41YIhhR-15">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -3,6 +3,7 @@
 #include "../include/hex_display.h"
 #include "../include/hps_audio.h"
 #include "../include/game_logic.h"
+#include "../include/buttons.h"
 
 int init_hardware(void);
 void cleanup_hardware(void);

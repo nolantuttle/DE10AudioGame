@@ -17,7 +17,7 @@ SRCS := $(wildcard $(SRC_DIR)/*.c)
 OBJS := $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRCS))
 
 # Default target
-all: $(TARGET)
+all: $(TARGET) module
 
 # Link
 $(TARGET): $(OBJS) | $(BIN_DIR)

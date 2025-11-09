@@ -1,0 +1,62 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36" version="28.2.7">
+  <diagram name="Page-1" id="Jl_d6wQuBh7jQ_0vPI5F">
+    <mxGraphModel dx="1426" dy="715" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="kIR68pfnHBX2dsUrN5zu-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="kIR68pfnHBX2dsUrN5zu-3" target="kIR68pfnHBX2dsUrN5zu-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="kIR68pfnHBX2dsUrN5zu-3" value="Wait/check for HPS write to audio register" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;fillColor=#b1ddf0;strokeColor=#10739e;" vertex="1" parent="1">
+          <mxGeometry x="120" y="280" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="kIR68pfnHBX2dsUrN5zu-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="kIR68pfnHBX2dsUrN5zu-4" target="kIR68pfnHBX2dsUrN5zu-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="kIR68pfnHBX2dsUrN5zu-4" value="Start" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.start_1;whiteSpace=wrap;fillColor=#b1ddf0;strokeColor=#10739e;" vertex="1" parent="1">
+          <mxGeometry x="120" y="140" width="80" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="kIR68pfnHBX2dsUrN5zu-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="kIR68pfnHBX2dsUrN5zu-6" target="kIR68pfnHBX2dsUrN5zu-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="kIR68pfnHBX2dsUrN5zu-6" value="Read audio sample from register" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;fillColor=#b1ddf0;strokeColor=#10739e;" vertex="1" parent="1">
+          <mxGeometry x="120" y="400" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="kIR68pfnHBX2dsUrN5zu-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="kIR68pfnHBX2dsUrN5zu-7" target="kIR68pfnHBX2dsUrN5zu-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="kIR68pfnHBX2dsUrN5zu-7" value="Format sample to be ready for I&lt;sup&gt;2&lt;/sup&gt;S bitstream" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;fillColor=#b1ddf0;strokeColor=#10739e;" vertex="1" parent="1">
+          <mxGeometry x="240" y="400" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="kIR68pfnHBX2dsUrN5zu-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="kIR68pfnHBX2dsUrN5zu-8" target="kIR68pfnHBX2dsUrN5zu-9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="kIR68pfnHBX2dsUrN5zu-8" value="Send audio sample to WM8731 Audio Codec" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;fillColor=#b1ddf0;strokeColor=#10739e;" vertex="1" parent="1">
+          <mxGeometry x="360" y="400" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="kIR68pfnHBX2dsUrN5zu-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="kIR68pfnHBX2dsUrN5zu-9" target="kIR68pfnHBX2dsUrN5zu-14">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="kIR68pfnHBX2dsUrN5zu-17" value="No" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="kIR68pfnHBX2dsUrN5zu-16">
+          <mxGeometry x="-0.3" y="-1" relative="1" as="geometry">
+            <mxPoint x="-1" y="-5" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="kIR68pfnHBX2dsUrN5zu-18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="kIR68pfnHBX2dsUrN5zu-9" target="kIR68pfnHBX2dsUrN5zu-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="kIR68pfnHBX2dsUrN5zu-19" value="Yes" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="kIR68pfnHBX2dsUrN5zu-18">
+          <mxGeometry x="-0.7677" y="3" relative="1" as="geometry">
+            <mxPoint x="-57" y="-3" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="kIR68pfnHBX2dsUrN5zu-9" value="More&amp;nbsp;&lt;div&gt;samples to&amp;nbsp;&lt;/div&gt;&lt;div&gt;be&amp;nbsp;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;read?&lt;/span&gt;&lt;/div&gt;" style="rhombus;whiteSpace=wrap;html=1;fillColor=#b1ddf0;strokeColor=#10739e;" vertex="1" parent="1">
+          <mxGeometry x="355" y="270" width="90" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="kIR68pfnHBX2dsUrN5zu-14" value="End" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.terminator;whiteSpace=wrap;fillColor=#b1ddf0;strokeColor=#10739e;" vertex="1" parent="1">
+          <mxGeometry x="350" y="140" width="100" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
