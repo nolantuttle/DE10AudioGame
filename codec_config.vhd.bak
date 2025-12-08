@@ -1,0 +1,79 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity codec_config is
+port (
+clk_50      : in  std_logic;        -- 50 MHz FPGA clock
+reset_n     : in  std_logic;        -- active-low reset
+start_cfg   : in  std_logic;        -- switch to trigger config
+i2c_busy    : in  std_logic;        -- from your I2C module
+i2c_done    : in  std_logic;
+i2c_send_flag : out std_logic;
+i2c_addr    : out std_logic_vector(7 downto 0);
+i2c_data    : out std_logic_vector(15 downto 0)
+);
+end codec_config;
+
+architecture fsm of codec_config is
+type state_type is (IDLE, SEND_REG, WAIT_ACK, NEXT_REG, DONE);
+signal state      : state_type := IDLE;
+signal cfg_index  : integer range 0 to 5 := 0;
+
+```
+-- Example configuration values for WM8731 (could be adjusted)  
+type reg_array is array(0 to 5) of std_logic_vector(15 downto 0);  
+constant CFG_WORDS : reg_array := (  
+    x"0017", -- Digital Audio Interface: DSP mode, 16-bit, slave  
+    x"0002", -- Headphone volume  
+    x"0006", -- Power management: ADC off, DAC on, line out on  
+    x"0008", -- USB mode  
+    x"0004", -- Enable DAC to line out  
+    x"0005"  -- Unmute DAC  
+);  
+```
+
+begin
+process(clk_50, reset_n)
+begin
+	if reset_n = '0' then
+	state <= IDLE;
+	cfg_index <= 0;
+	i2c_send_flag <= '0';
+	else if rising_edge(clk_50) then
+		case state is
+	when IDLE =>
+		if start_cfg = '1' then
+			cfg_index <= 0;
+			i2c_addr <= "00110100"; -- WM8731 I2C address
+			i2c_data <= CFG_WORDS(cfg_index);
+			i2c_send_flag <= '1';
+			state <= WAIT_ACK;
+	end if;
+	when WAIT_ACK =>  
+		 i2c_send_flag <= '0';  
+		 if i2c_done = '1' then  
+			  state <= NEXT_REG;  
+		 end if;  
+
+		when NEXT_REG =>  
+                if cfg_index < CFG_WORDS'high then  
+                    cfg_index <= cfg_index + 1;  
+                    i2c_data <= CFG_WORDS(cfg_index + 1);  
+                    i2c_send_flag <= '1';  
+                    state <= WAIT_ACK;  
+                else  
+                    state <= DONE;  
+                end if;  
+
+            when DONE =>  
+                -- stay here until reset or next trigger  
+                null;  
+
+            when others => state <= IDLE;  
+        end case;  
+    end if;  
+end process;  
+```
+
+end fsm;
