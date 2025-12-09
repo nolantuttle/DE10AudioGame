@@ -59,17 +59,5 @@ static void __exit cleanup_pushbutton_handler(void)
     free_irq(KEYS_IRQ, (void *)irq_handler);
 }
 
-void play_sequence()
-{
-    while (1)
-    {
-        // Turn on GPIO[0] (tone A)
-        *JP1_ptr = 0x1;
-        usleep(100000); // 100 ms
-        *JP1_ptr = 0x0; // turn off
-        usleep(100000); // 100 ms pause
-    }
-}
-
 module_init(initialize_pushbutton_handler);
 module_exit(cleanup_pushbutton_handler);

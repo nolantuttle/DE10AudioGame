@@ -1,5 +1,5 @@
 Analysis & Synthesis report for quartus_audio_gen
-Wed Dec  3 11:23:47 2025
+Tue Dec  9 08:26:45 2025
 Quartus Prime Version 25.1std.0 Build 1129 10/21/2025 SC Lite Edition
 
 
@@ -13,17 +13,18 @@ Quartus Prime Version 25.1std.0 Build 1129 10/21/2025 SC Lite Edition
   5. Analysis & Synthesis Source Files Read
   6. Analysis & Synthesis Resource Usage Summary
   7. Analysis & Synthesis Resource Utilization by Entity
-  8. State Machine - |audio_top|i2s_tx:i2s_inst|state
-  9. State Machine - |audio_top|i2c:i2c_inst|state
- 10. State Machine - |audio_top|codec_config:cfg_inst|state
- 11. Registers Removed During Synthesis
- 12. General Register Statistics
- 13. Inverted Register Statistics
- 14. Multiplexer Restructuring Statistics (Restructuring Performed)
- 15. Port Connectivity Checks: "codec_config:cfg_inst"
- 16. Post-Synthesis Netlist Statistics for Top Partition
- 17. Elapsed Time Per Partition
- 18. Analysis & Synthesis Messages
+  8. State Machine - |audio_top|game_state
+  9. State Machine - |audio_top|i2s_tx:i2s_inst|state
+ 10. State Machine - |audio_top|i2c:i2c_inst|state
+ 11. State Machine - |audio_top|codec_config:cfg_inst|state
+ 12. Registers Removed During Synthesis
+ 13. General Register Statistics
+ 14. Inverted Register Statistics
+ 15. Multiplexer Restructuring Statistics (Restructuring Performed)
+ 16. Port Connectivity Checks: "codec_config:cfg_inst"
+ 17. Post-Synthesis Netlist Statistics for Top Partition
+ 18. Elapsed Time Per Partition
+ 19. Analysis & Synthesis Messages
 
 
 
@@ -50,14 +51,14 @@ on the Quartus Prime software download page.
 +-----------------------------------------------------------------------------------+
 ; Analysis & Synthesis Summary                                                      ;
 +---------------------------------+-------------------------------------------------+
-; Analysis & Synthesis Status     ; Successful - Wed Dec  3 11:23:47 2025           ;
+; Analysis & Synthesis Status     ; Successful - Tue Dec  9 08:26:45 2025           ;
 ; Quartus Prime Version           ; 25.1std.0 Build 1129 10/21/2025 SC Lite Edition ;
 ; Revision Name                   ; quartus_audio_gen                               ;
 ; Top-level Entity Name           ; audio_top                                       ;
 ; Family                          ; Cyclone V                                       ;
 ; Logic utilization (in ALMs)     ; N/A                                             ;
-; Total registers                 ; 134                                             ;
-; Total pins                      ; 57                                              ;
+; Total registers                 ; 243                                             ;
+; Total pins                      ; 30                                              ;
 ; Total virtual pins              ; 0                                               ;
 ; Total block memory bits         ; 0                                               ;
 ; Total DSP Blocks                ; 0                                               ;
@@ -187,31 +188,31 @@ on the Quartus Prime software download page.
 +----------------------------------+-----------------+-----------------+---------------------------------------------------------+---------+
 
 
-+--------------------------------------------------------------+
-; Analysis & Synthesis Resource Usage Summary                  ;
-+---------------------------------------------+----------------+
-; Resource                                    ; Usage          ;
-+---------------------------------------------+----------------+
-; Estimate of Logic utilization (ALMs needed) ; 161            ;
-;                                             ;                ;
-; Combinational ALUT usage for logic          ; 206            ;
-;     -- 7 input functions                    ; 2              ;
-;     -- 6 input functions                    ; 83             ;
-;     -- 5 input functions                    ; 21             ;
-;     -- 4 input functions                    ; 34             ;
-;     -- <=3 input functions                  ; 66             ;
-;                                             ;                ;
-; Dedicated logic registers                   ; 134            ;
-;                                             ;                ;
-; I/O pins                                    ; 57             ;
-;                                             ;                ;
-; Total DSP Blocks                            ; 0              ;
-;                                             ;                ;
-; Maximum fan-out node                        ; CLOCK_50~input ;
-; Maximum fan-out                             ; 134            ;
-; Total fan-out                               ; 1533           ;
-; Average fan-out                             ; 3.12           ;
-+---------------------------------------------+----------------+
++-----------------------------------------------------------+
+; Analysis & Synthesis Resource Usage Summary               ;
++---------------------------------------------+-------------+
+; Resource                                    ; Usage       ;
++---------------------------------------------+-------------+
+; Estimate of Logic utilization (ALMs needed) ; 292         ;
+;                                             ;             ;
+; Combinational ALUT usage for logic          ; 410         ;
+;     -- 7 input functions                    ; 7           ;
+;     -- 6 input functions                    ; 134         ;
+;     -- 5 input functions                    ; 54          ;
+;     -- 4 input functions                    ; 57          ;
+;     -- <=3 input functions                  ; 158         ;
+;                                             ;             ;
+; Dedicated logic registers                   ; 243         ;
+;                                             ;             ;
+; I/O pins                                    ; 30          ;
+;                                             ;             ;
+; Total DSP Blocks                            ; 0           ;
+;                                             ;             ;
+; Maximum fan-out node                        ; SW[0]~input ;
+; Maximum fan-out                             ; 195         ;
+; Total fan-out                               ; 2671        ;
+; Average fan-out                             ; 3.74        ;
++---------------------------------------------+-------------+
 
 
 +------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -219,12 +220,26 @@ on the Quartus Prime software download page.
 +----------------------------+---------------------+---------------------------+-------------------+------------+------+--------------+----------------------------------+--------------+--------------+
 ; Compilation Hierarchy Node ; Combinational ALUTs ; Dedicated Logic Registers ; Block Memory Bits ; DSP Blocks ; Pins ; Virtual Pins ; Full Hierarchy Name              ; Entity Name  ; Library Name ;
 +----------------------------+---------------------+---------------------------+-------------------+------------+------+--------------+----------------------------------+--------------+--------------+
-; |audio_top                 ; 206 (103)           ; 134 (29)                  ; 0                 ; 0          ; 57   ; 0            ; |audio_top                       ; audio_top    ; work         ;
+; |audio_top                 ; 410 (306)           ; 243 (138)                 ; 0                 ; 0          ; 30   ; 0            ; |audio_top                       ; audio_top    ; work         ;
 ;    |codec_config:cfg_inst| ; 19 (19)             ; 22 (22)                   ; 0                 ; 0          ; 0    ; 0            ; |audio_top|codec_config:cfg_inst ; codec_config ; work         ;
-;    |i2c:i2c_inst|          ; 59 (59)             ; 32 (32)                   ; 0                 ; 0          ; 0    ; 0            ; |audio_top|i2c:i2c_inst          ; i2c          ; work         ;
+;    |i2c:i2c_inst|          ; 60 (60)             ; 32 (32)                   ; 0                 ; 0          ; 0    ; 0            ; |audio_top|i2c:i2c_inst          ; i2c          ; work         ;
 ;    |i2s_tx:i2s_inst|       ; 25 (25)             ; 51 (51)                   ; 0                 ; 0          ; 0    ; 0            ; |audio_top|i2s_tx:i2s_inst       ; i2s_tx       ; work         ;
 +----------------------------+---------------------+---------------------------+-------------------+------------+------+--------------+----------------------------------+--------------+--------------+
 Note: For table entries with two numbers listed, the numbers in parentheses indicate the number of resources of the given type used by the specific entity alone. The numbers listed outside of parentheses indicate the total resources of the given type used by the specific entity and all of its sub-entities in the hierarchy.
+
+
+Encoding Type:  One-Hot
++-----------------------------------------------------------------------------------------------------------------------------------+
+; State Machine - |audio_top|game_state                                                                                             ;
++-------------------------+-----------------+----------------+----------------------+---------------------+-------------------------+
+; Name                    ; game_state.LOSE ; game_state.WIN ; game_state.WAIT_USER ; game_state.PLAY_SEQ ; game_state.GENERATE_SEQ ;
++-------------------------+-----------------+----------------+----------------------+---------------------+-------------------------+
+; game_state.GENERATE_SEQ ; 0               ; 0              ; 0                    ; 0                   ; 0                       ;
+; game_state.PLAY_SEQ     ; 0               ; 0              ; 0                    ; 1                   ; 1                       ;
+; game_state.WAIT_USER    ; 0               ; 0              ; 1                    ; 0                   ; 1                       ;
+; game_state.WIN          ; 0               ; 1              ; 0                    ; 0                   ; 1                       ;
+; game_state.LOSE         ; 1               ; 0              ; 0                    ; 0                   ; 1                       ;
++-------------------------+-----------------+----------------+----------------------+---------------------+-------------------------+
 
 
 Encoding Type:  One-Hot
@@ -280,10 +295,9 @@ Encoding Type:  One-Hot
 ; codec_config:cfg_inst|i2c_data[7,13..15]  ; Stuck at GND due to stuck port data_in        ;
 ; codec_config:cfg_inst|i2c_addr[2]         ; Merged with codec_config:cfg_inst|i2c_addr[4] ;
 ; codec_config:cfg_inst|i2c_addr[4]         ; Merged with codec_config:cfg_inst|i2c_addr[5] ;
-; audio_sample[1..7]                        ; Merged with audio_sample[8]                   ;
 ; codec_config:cfg_inst|i2c_data[3,5,6]     ; Merged with codec_config:cfg_inst|i2c_data[8] ;
-; key_prev[3]                               ; Merged with key_pressed[3]                    ;
-; Total Number of Removed Registers = 22    ;                                               ;
+; audio_sample[2..8]                        ; Merged with audio_sample[1]                   ;
+; Total Number of Removed Registers = 21    ;                                               ;
 +-------------------------------------------+-----------------------------------------------+
 
 
@@ -292,42 +306,57 @@ Encoding Type:  One-Hot
 +----------------------------------------------+-------+
 ; Statistic                                    ; Value ;
 +----------------------------------------------+-------+
-; Total registers                              ; 134   ;
-; Number of registers using Synchronous Clear  ; 20    ;
+; Total registers                              ; 243   ;
+; Number of registers using Synchronous Clear  ; 68    ;
 ; Number of registers using Synchronous Load   ; 30    ;
-; Number of registers using Asynchronous Clear ; 102   ;
+; Number of registers using Asynchronous Clear ; 179   ;
 ; Number of registers using Asynchronous Load  ; 0     ;
-; Number of registers using Clock Enable       ; 75    ;
+; Number of registers using Clock Enable       ; 161   ;
 ; Number of registers using Preset             ; 0     ;
 +----------------------------------------------+-------+
 
 
-+--------------------------------------------------+
-; Inverted Register Statistics                     ;
-+----------------------------------------+---------+
-; Inverted Register                      ; Fan out ;
-+----------------------------------------+---------+
-; key_prev[1]                            ; 1       ;
-; key_prev[2]                            ; 1       ;
-; Total number of inverted registers = 2 ;         ;
-+----------------------------------------+---------+
++---------------------------------------------------+
+; Inverted Register Statistics                      ;
++-----------------------------------------+---------+
+; Inverted Register                       ; Fan out ;
++-----------------------------------------+---------+
+; selected_tone[2]                        ; 17      ;
+; sequence_length[0]                      ; 23      ;
+; key_prev[0]                             ; 1       ;
+; key_prev[1]                             ; 1       ;
+; key_prev[2]                             ; 1       ;
+; key_prev[3]                             ; 1       ;
+; lfsr[1]                                 ; 17      ;
+; lfsr[7]                                 ; 1       ;
+; lfsr[5]                                 ; 2       ;
+; lfsr[3]                                 ; 2       ;
+; Total number of inverted registers = 10 ;         ;
++-----------------------------------------+---------+
 
 
-+-----------------------------------------------------------------------------------------------------------------------------------------------------------+
-; Multiplexer Restructuring Statistics (Restructuring Performed)                                                                                            ;
-+--------------------+-----------+---------------+----------------------+------------------------+------------+---------------------------------------------+
-; Multiplexer Inputs ; Bus Width ; Baseline Area ; Area if Restructured ; Saving if Restructured ; Registered ; Example Multiplexer Output                  ;
-+--------------------+-----------+---------------+----------------------+------------------------+------------+---------------------------------------------+
-; 4:1                ; 9 bits    ; 18 LEs        ; 18 LEs               ; 0 LEs                  ; Yes        ; |audio_top|audio_sample[12]                 ;
-; 3:1                ; 2 bits    ; 4 LEs         ; 2 LEs                ; 2 LEs                  ; Yes        ; |audio_top|i2c:i2c_inst|i2c_clk_en          ;
-; 5:1                ; 2 bits    ; 6 LEs         ; 4 LEs                ; 2 LEs                  ; Yes        ; |audio_top|selected_tone[0]                 ;
-; 4:1                ; 15 bits   ; 30 LEs        ; 0 LEs                ; 30 LEs                 ; Yes        ; |audio_top|i2s_tx:i2s_inst|shift_reg_l[10]  ;
-; 5:1                ; 15 bits   ; 45 LEs        ; 0 LEs                ; 45 LEs                 ; Yes        ; |audio_top|i2s_tx:i2s_inst|shift_reg_r[3]   ;
-; 8:1                ; 3 bits    ; 15 LEs        ; 6 LEs                ; 9 LEs                  ; Yes        ; |audio_top|i2c:i2c_inst|data_index[2]       ;
-; 6:1                ; 2 bits    ; 8 LEs         ; 6 LEs                ; 2 LEs                  ; No         ; |audio_top|codec_config:cfg_inst|Selector10 ;
-; 7:1                ; 2 bits    ; 8 LEs         ; 4 LEs                ; 4 LEs                  ; No         ; |audio_top|i2s_tx:i2s_inst|state            ;
-; 7:1                ; 3 bits    ; 12 LEs        ; 6 LEs                ; 6 LEs                  ; No         ; |audio_top|i2c:i2c_inst|state               ;
-+--------------------+-----------+---------------+----------------------+------------------------+------------+---------------------------------------------+
++----------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Multiplexer Restructuring Statistics (Restructuring Performed)                                                                                           ;
++--------------------+-----------+---------------+----------------------+------------------------+------------+--------------------------------------------+
+; Multiplexer Inputs ; Bus Width ; Baseline Area ; Area if Restructured ; Saving if Restructured ; Registered ; Example Multiplexer Output                 ;
++--------------------+-----------+---------------+----------------------+------------------------+------------+--------------------------------------------+
+; 5:1                ; 6 bits    ; 18 LEs        ; 18 LEs               ; 0 LEs                  ; Yes        ; |audio_top|audio_sample[14]                ;
+; 3:1                ; 2 bits    ; 4 LEs         ; 2 LEs                ; 2 LEs                  ; Yes        ; |audio_top|i2c:i2c_inst|i2c_clk_en         ;
+; 4:1                ; 3 bits    ; 6 LEs         ; 6 LEs                ; 0 LEs                  ; Yes        ; |audio_top|audio_sample[1]                 ;
+; 4:1                ; 15 bits   ; 30 LEs        ; 0 LEs                ; 30 LEs                 ; Yes        ; |audio_top|i2s_tx:i2s_inst|shift_reg_l[4]  ;
+; 5:1                ; 4 bits    ; 12 LEs        ; 4 LEs                ; 8 LEs                  ; Yes        ; |audio_top|user_index[0]                   ;
+; 5:1                ; 15 bits   ; 45 LEs        ; 0 LEs                ; 45 LEs                 ; Yes        ; |audio_top|i2s_tx:i2s_inst|shift_reg_r[7]  ;
+; 6:1                ; 23 bits   ; 92 LEs        ; 0 LEs                ; 92 LEs                 ; Yes        ; |audio_top|pause_counter[11]               ;
+; 8:1                ; 3 bits    ; 15 LEs        ; 6 LEs                ; 9 LEs                  ; Yes        ; |audio_top|i2c:i2c_inst|data_index[2]      ;
+; 12:1               ; 24 bits   ; 192 LEs       ; 0 LEs                ; 192 LEs                ; Yes        ; |audio_top|beep_counter[23]                ;
+; 28:1               ; 2 bits    ; 36 LEs        ; 32 LEs               ; 4 LEs                  ; Yes        ; |audio_top|selected_tone[0]                ;
+; 16:1               ; 2 bits    ; 20 LEs        ; 20 LEs               ; 0 LEs                  ; No         ; |audio_top|Mux3                            ;
+; 6:1                ; 2 bits    ; 8 LEs         ; 6 LEs                ; 2 LEs                  ; No         ; |audio_top|codec_config:cfg_inst|Selector7 ;
+; 7:1                ; 2 bits    ; 8 LEs         ; 4 LEs                ; 4 LEs                  ; No         ; |audio_top|i2s_tx:i2s_inst|state           ;
+; 8:1                ; 3 bits    ; 15 LEs        ; 9 LEs                ; 6 LEs                  ; No         ; |audio_top|Selector4                       ;
+; 7:1                ; 3 bits    ; 12 LEs        ; 6 LEs                ; 6 LEs                  ; No         ; |audio_top|i2c:i2c_inst|state              ;
+; 9:1                ; 2 bits    ; 12 LEs        ; 8 LEs                ; 4 LEs                  ; No         ; |audio_top|Selector1                       ;
++--------------------+-----------+---------------+----------------------+------------------------+------------+--------------------------------------------+
 
 
 +---------------------------------------------------+
@@ -344,32 +373,32 @@ Encoding Type:  One-Hot
 +-----------------------+-----------------------------+
 ; Type                  ; Count                       ;
 +-----------------------+-----------------------------+
-; arriav_ff             ; 134                         ;
-;     CLR               ; 33                          ;
+; arriav_ff             ; 243                         ;
+;     CLR               ; 56                          ;
 ;     CLR SCLR          ; 1                           ;
-;     ENA               ; 7                           ;
-;     ENA CLR           ; 28                          ;
-;     ENA CLR SCLR      ; 10                          ;
+;     ENA               ; 39                          ;
+;     ENA CLR           ; 34                          ;
+;     ENA CLR SCLR      ; 58                          ;
 ;     ENA CLR SLD       ; 30                          ;
 ;     SCLR              ; 9                           ;
 ;     plain             ; 16                          ;
-; arriav_io_obuf        ; 37                          ;
-; arriav_lcell_comb     ; 206                         ;
-;     arith             ; 19                          ;
-;         1 data inputs ; 19                          ;
-;     extend            ; 2                           ;
-;         7 data inputs ; 2                           ;
-;     normal            ; 185                         ;
-;         1 data inputs ; 5                           ;
-;         2 data inputs ; 11                          ;
-;         3 data inputs ; 31                          ;
-;         4 data inputs ; 34                          ;
-;         5 data inputs ; 21                          ;
-;         6 data inputs ; 83                          ;
-; boundary_port         ; 57                          ;
+; arriav_io_obuf        ; 1                           ;
+; arriav_lcell_comb     ; 412                         ;
+;     arith             ; 64                          ;
+;         1 data inputs ; 64                          ;
+;     extend            ; 7                           ;
+;         7 data inputs ; 7                           ;
+;     normal            ; 341                         ;
+;         1 data inputs ; 33                          ;
+;         2 data inputs ; 23                          ;
+;         3 data inputs ; 40                          ;
+;         4 data inputs ; 57                          ;
+;         5 data inputs ; 54                          ;
+;         6 data inputs ; 134                         ;
+; boundary_port         ; 30                          ;
 ;                       ;                             ;
-; Max LUT depth         ; 3.00                        ;
-; Average LUT depth     ; 1.64                        ;
+; Max LUT depth         ; 4.00                        ;
+; Average LUT depth     ; 2.38                        ;
 +-----------------------+-----------------------------+
 
 
@@ -378,7 +407,7 @@ Encoding Type:  One-Hot
 +----------------+--------------+
 ; Partition Name ; Elapsed Time ;
 +----------------+--------------+
-; Top            ; 00:00:00     ;
+; Top            ; 00:00:01     ;
 +----------------+--------------+
 
 
@@ -388,7 +417,7 @@ Encoding Type:  One-Hot
 Info: *******************************************************************
 Info: Running Quartus Prime Analysis & Synthesis
     Info: Version 25.1std.0 Build 1129 10/21/2025 SC Lite Edition
-    Info: Processing started: Wed Dec  3 11:23:40 2025
+    Info: Processing started: Tue Dec  9 08:26:34 2025
 Info: Command: quartus_map --read_settings_files=on --write_settings_files=off quartus_audio_gen -c quartus_audio_gen
 Info (20032): Parallel compilation is enabled and will use up to 6 processors
 Info (12021): Found 1 design units, including 1 entities, in source file baseline_c5gx.v
@@ -403,49 +432,12 @@ Info (12021): Found 2 design units, including 1 entities, in source file i2s.vhd
     Info (12022): Found design unit 1: i2s_tx-rtl File: C:/Users/nolan/Documents/DE10AudioGame/i2s.vhd Line: 19
     Info (12023): Found entity 1: i2s_tx File: C:/Users/nolan/Documents/DE10AudioGame/i2s.vhd Line: 5
 Info (12021): Found 2 design units, including 1 entities, in source file audio_top.vhd
-    Info (12022): Found design unit 1: audio_top-rtl File: C:/Users/nolan/Documents/DE10AudioGame/audio_top.vhd Line: 26
+    Info (12022): Found design unit 1: audio_top-rtl File: C:/Users/nolan/Documents/DE10AudioGame/audio_top.vhd Line: 25
     Info (12023): Found entity 1: audio_top File: C:/Users/nolan/Documents/DE10AudioGame/audio_top.vhd Line: 5
 Info (12127): Elaborating entity "audio_top" for the top level hierarchy
-Info (12128): Elaborating entity "codec_config" for hierarchy "codec_config:cfg_inst" File: C:/Users/nolan/Documents/DE10AudioGame/audio_top.vhd Line: 297
-Info (12128): Elaborating entity "i2c" for hierarchy "i2c:i2c_inst" File: C:/Users/nolan/Documents/DE10AudioGame/audio_top.vhd Line: 311
-Info (12128): Elaborating entity "i2s_tx" for hierarchy "i2s_tx:i2s_inst" File: C:/Users/nolan/Documents/DE10AudioGame/audio_top.vhd Line: 325
-Warning (13039): The following bidirectional pins have no drivers
-    Warning (13040): bidirectional pin "GPIO[0]" has no driver File: C:/Users/nolan/Documents/DE10AudioGame/audio_top.vhd Line: 22
-    Warning (13040): bidirectional pin "GPIO[1]" has no driver File: C:/Users/nolan/Documents/DE10AudioGame/audio_top.vhd Line: 22
-    Warning (13040): bidirectional pin "GPIO[2]" has no driver File: C:/Users/nolan/Documents/DE10AudioGame/audio_top.vhd Line: 22
-    Warning (13040): bidirectional pin "GPIO[3]" has no driver File: C:/Users/nolan/Documents/DE10AudioGame/audio_top.vhd Line: 22
-    Warning (13040): bidirectional pin "GPIO[4]" has no driver File: C:/Users/nolan/Documents/DE10AudioGame/audio_top.vhd Line: 22
-    Warning (13040): bidirectional pin "GPIO[5]" has no driver File: C:/Users/nolan/Documents/DE10AudioGame/audio_top.vhd Line: 22
-    Warning (13040): bidirectional pin "GPIO[6]" has no driver File: C:/Users/nolan/Documents/DE10AudioGame/audio_top.vhd Line: 22
-    Warning (13040): bidirectional pin "GPIO[7]" has no driver File: C:/Users/nolan/Documents/DE10AudioGame/audio_top.vhd Line: 22
-    Warning (13040): bidirectional pin "GPIO[8]" has no driver File: C:/Users/nolan/Documents/DE10AudioGame/audio_top.vhd Line: 22
-    Warning (13040): bidirectional pin "GPIO[9]" has no driver File: C:/Users/nolan/Documents/DE10AudioGame/audio_top.vhd Line: 22
-    Warning (13040): bidirectional pin "GPIO[10]" has no driver File: C:/Users/nolan/Documents/DE10AudioGame/audio_top.vhd Line: 22
-    Warning (13040): bidirectional pin "GPIO[11]" has no driver File: C:/Users/nolan/Documents/DE10AudioGame/audio_top.vhd Line: 22
-    Warning (13040): bidirectional pin "GPIO[12]" has no driver File: C:/Users/nolan/Documents/DE10AudioGame/audio_top.vhd Line: 22
-    Warning (13040): bidirectional pin "GPIO[13]" has no driver File: C:/Users/nolan/Documents/DE10AudioGame/audio_top.vhd Line: 22
-    Warning (13040): bidirectional pin "GPIO[14]" has no driver File: C:/Users/nolan/Documents/DE10AudioGame/audio_top.vhd Line: 22
-    Warning (13040): bidirectional pin "GPIO[15]" has no driver File: C:/Users/nolan/Documents/DE10AudioGame/audio_top.vhd Line: 22
-    Warning (13040): bidirectional pin "GPIO[16]" has no driver File: C:/Users/nolan/Documents/DE10AudioGame/audio_top.vhd Line: 22
-    Warning (13040): bidirectional pin "GPIO[17]" has no driver File: C:/Users/nolan/Documents/DE10AudioGame/audio_top.vhd Line: 22
-    Warning (13040): bidirectional pin "GPIO[18]" has no driver File: C:/Users/nolan/Documents/DE10AudioGame/audio_top.vhd Line: 22
-    Warning (13040): bidirectional pin "GPIO[19]" has no driver File: C:/Users/nolan/Documents/DE10AudioGame/audio_top.vhd Line: 22
-    Warning (13040): bidirectional pin "GPIO[20]" has no driver File: C:/Users/nolan/Documents/DE10AudioGame/audio_top.vhd Line: 22
-    Warning (13040): bidirectional pin "GPIO[21]" has no driver File: C:/Users/nolan/Documents/DE10AudioGame/audio_top.vhd Line: 22
-    Warning (13040): bidirectional pin "GPIO[22]" has no driver File: C:/Users/nolan/Documents/DE10AudioGame/audio_top.vhd Line: 22
-    Warning (13040): bidirectional pin "GPIO[23]" has no driver File: C:/Users/nolan/Documents/DE10AudioGame/audio_top.vhd Line: 22
-    Warning (13040): bidirectional pin "GPIO[24]" has no driver File: C:/Users/nolan/Documents/DE10AudioGame/audio_top.vhd Line: 22
-    Warning (13040): bidirectional pin "GPIO[25]" has no driver File: C:/Users/nolan/Documents/DE10AudioGame/audio_top.vhd Line: 22
-    Warning (13040): bidirectional pin "GPIO[26]" has no driver File: C:/Users/nolan/Documents/DE10AudioGame/audio_top.vhd Line: 22
-    Warning (13040): bidirectional pin "GPIO[27]" has no driver File: C:/Users/nolan/Documents/DE10AudioGame/audio_top.vhd Line: 22
-    Warning (13040): bidirectional pin "GPIO[28]" has no driver File: C:/Users/nolan/Documents/DE10AudioGame/audio_top.vhd Line: 22
-    Warning (13040): bidirectional pin "GPIO[29]" has no driver File: C:/Users/nolan/Documents/DE10AudioGame/audio_top.vhd Line: 22
-    Warning (13040): bidirectional pin "GPIO[30]" has no driver File: C:/Users/nolan/Documents/DE10AudioGame/audio_top.vhd Line: 22
-    Warning (13040): bidirectional pin "GPIO[31]" has no driver File: C:/Users/nolan/Documents/DE10AudioGame/audio_top.vhd Line: 22
-    Warning (13040): bidirectional pin "GPIO[32]" has no driver File: C:/Users/nolan/Documents/DE10AudioGame/audio_top.vhd Line: 22
-    Warning (13040): bidirectional pin "GPIO[33]" has no driver File: C:/Users/nolan/Documents/DE10AudioGame/audio_top.vhd Line: 22
-    Warning (13040): bidirectional pin "GPIO[34]" has no driver File: C:/Users/nolan/Documents/DE10AudioGame/audio_top.vhd Line: 22
-    Warning (13040): bidirectional pin "GPIO[35]" has no driver File: C:/Users/nolan/Documents/DE10AudioGame/audio_top.vhd Line: 22
+Info (12128): Elaborating entity "codec_config" for hierarchy "codec_config:cfg_inst" File: C:/Users/nolan/Documents/DE10AudioGame/audio_top.vhd Line: 439
+Info (12128): Elaborating entity "i2c" for hierarchy "i2c:i2c_inst" File: C:/Users/nolan/Documents/DE10AudioGame/audio_top.vhd Line: 452
+Info (12128): Elaborating entity "i2s_tx" for hierarchy "i2s_tx:i2s_inst" File: C:/Users/nolan/Documents/DE10AudioGame/audio_top.vhd Line: 465
 Info (286030): Timing-Driven Synthesis is running
 Info (16010): Generating hard_block partition "hard_block:auto_generated_inst"
     Info (16011): Adding 0 node(s), including 0 DDIO, 0 PLL, 0 transceiver and 0 LCELL
@@ -459,15 +451,15 @@ Warning (21074): Design contains 9 input pin(s) that do not drive logic
     Warning (15610): No output dependent on input pin "SW[7]" File: C:/Users/nolan/Documents/DE10AudioGame/audio_top.vhd Line: 10
     Warning (15610): No output dependent on input pin "SW[8]" File: C:/Users/nolan/Documents/DE10AudioGame/audio_top.vhd Line: 10
     Warning (15610): No output dependent on input pin "SW[9]" File: C:/Users/nolan/Documents/DE10AudioGame/audio_top.vhd Line: 10
-Info (21057): Implemented 299 device resources after synthesis - the final resource count might be different
+Info (21057): Implemented 493 device resources after synthesis - the final resource count might be different
     Info (21058): Implemented 15 input pins
-    Info (21059): Implemented 5 output pins
-    Info (21060): Implemented 37 bidirectional pins
-    Info (21061): Implemented 242 logic cells
-Info: Quartus Prime Analysis & Synthesis was successful. 0 errors, 47 warnings
-    Info: Peak virtual memory: 4948 megabytes
-    Info: Processing ended: Wed Dec  3 11:23:47 2025
-    Info: Elapsed time: 00:00:07
-    Info: Total CPU time (on all processors): 00:00:18
+    Info (21059): Implemented 14 output pins
+    Info (21060): Implemented 1 bidirectional pins
+    Info (21061): Implemented 463 logic cells
+Info: Quartus Prime Analysis & Synthesis was successful. 0 errors, 10 warnings
+    Info: Peak virtual memory: 4952 megabytes
+    Info: Processing ended: Tue Dec  9 08:26:45 2025
+    Info: Elapsed time: 00:00:11
+    Info: Total CPU time (on all processors): 00:00:26
 
 

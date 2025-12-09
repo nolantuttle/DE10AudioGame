@@ -1,4 +1,12 @@
 
+State Machine - |audio_top|game_state
+Name game_state.LOSE game_state.WIN game_state.WAIT_USER game_state.PLAY_SEQ game_state.GENERATE_SEQ 
+game_state.GENERATE_SEQ 0 0 0 0 0 
+game_state.PLAY_SEQ 0 0 0 1 1 
+game_state.WAIT_USER 0 0 1 0 1 
+game_state.WIN 0 1 0 0 1 
+game_state.LOSE 1 0 0 0 1 
+
 State Machine - |audio_top|i2s_tx:i2s_inst|state
 Name state.SEND_RIGHT state.SEND_LEFT state.IDLE 
 state.IDLE 0 0 0 

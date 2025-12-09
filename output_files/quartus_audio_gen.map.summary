@@ -1,11 +1,11 @@
-Analysis & Synthesis Status : Successful - Wed Dec  3 11:23:47 2025
+Analysis & Synthesis Status : Successful - Tue Dec  9 08:26:45 2025
 Quartus Prime Version : 25.1std.0 Build 1129 10/21/2025 SC Lite Edition
 Revision Name : quartus_audio_gen
 Top-level Entity Name : audio_top
 Family : Cyclone V
 Logic utilization (in ALMs) : N/A
-Total registers : 134
-Total pins : 57
+Total registers : 243
+Total pins : 30
 Total virtual pins : 0
 Total block memory bits : 0
 Total DSP Blocks : 0

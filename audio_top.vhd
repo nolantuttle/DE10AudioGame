@@ -5,27 +5,26 @@ use ieee.numeric_std.all;
 entity audio_top is
     port (
         -- FPGA inputs
-        CLOCK_50    : in    std_logic;                      -- 50 MHz clock
-        KEY         : in    std_logic_vector(3 downto 0);   -- 4 buttons (active low)
-        SW          : in    std_logic_vector(9 downto 0);   -- switches
+        CLOCK_50    : in    std_logic;
+        KEY         : in    std_logic_vector(3 downto 0);
+        SW          : in    std_logic_vector(9 downto 0);
+		  LEDR		  : out 	 std_logic_vector(8 downto 0);
         
         -- I2C for WM8731 configuration
         FPGA_I2C_SCLK : out   std_logic;
         FPGA_I2C_SDAT : inout std_logic;
         
         -- I2S audio output to WM8731
-        AUD_BCLK    : out   std_logic;                      -- I2S bit clock
-        AUD_DACLRCK : out   std_logic;                      -- I2S left/right clock
-        AUD_DACDAT  : out   std_logic;                      -- I2S data
-        AUD_XCK     : out   std_logic;                      -- Master clock to codec (12 MHz)
-		  
-		  GPIO		  : inout std_logic_vector(35 downto 0)
+        AUD_BCLK    : out   std_logic;
+        AUD_DACLRCK : out   std_logic;
+        AUD_DACDAT  : out   std_logic;
+        AUD_XCK     : out   std_logic
     );
 end audio_top;
 
 architecture rtl of audio_top is
     
-    -- Reset signal (active low)
+    -- Reset signal
     signal reset_n : std_logic;
     
     -- I2C signals
@@ -41,34 +40,50 @@ architecture rtl of audio_top is
     
     -- Audio sample signals
     signal audio_sample  : std_logic_vector(15 downto 0);
-    signal sample_index  : integer range 0 to 1023 := 0;
-    signal selected_tone : integer range 0 to 3 := 0;
-	 signal sample_request : std_logic;
+    signal sample_index  : integer range 0 to 255 := 0;
+    constant TONE_NONE   : integer := 4;
+    signal selected_tone : integer range 0 to 4 := TONE_NONE;
+    signal sample_request : std_logic;
     
     -- Button debouncing
     signal key_prev      : std_logic_vector(3 downto 0) := (others => '1');
     signal key_pressed   : std_logic_vector(3 downto 0) := (others => '0');
     
-    -- 12 MHz clock generation (for codec master clock)
+    -- 12 MHz clock generation
     signal clock_12      : std_logic := '0';
     signal clk_12_div    : integer range 0 to 1 := 0;
     
-    -------------------------------------------------------------------------
-    -- Audio Sample Storage
-    -- Simple sine wave lookup tables for 4 different frequencies
-    -------------------------------------------------------------------------
+    -- Random number generator (LFSR)
+    signal lfsr : std_logic_vector(7 downto 0) := "10101010";
+    signal random_tone : integer range 0 to 3;
     
-    -- Sample array type: 256 samples per tone
+    -- Game sequence storage
+    type sequence_array is array(0 to 15) of integer range 0 to 3;
+    signal game_sequence : sequence_array := (others => 0);
+    signal sequence_length : integer range 1 to 16 := 1;
+    signal current_index : integer range 0 to 15 := 0;
+    
+    -- Game state machine (NO IDLE STATE)
+    type game_state_type is (GENERATE_SEQ, PLAY_SEQ, WAIT_USER, WIN, LOSE);
+    signal game_state : game_state_type := GENERATE_SEQ;
+    signal user_index : integer range 0 to 15 := 0;
+    signal wrong_button : std_logic := '0';  -- Flag to remember if button was wrong
+    
+    -- Beep timing
+    signal beep_counter : integer range 0 to 12_000_000 := 0;
+    signal beep_playing : std_logic := '0';
+    signal pause_counter : integer range 0 to 6_000_000 := 0;
+    signal in_pause : std_logic := '0';
+    
+    -- Audio sample lookup tables
     type sample_array is array(0 to 255) of std_logic_vector(15 downto 0);
     
-    -- Generate 440 Hz tone (A4 note) - Sine wave
     function generate_sine_440hz return sample_array is
         variable samples : sample_array;
         variable phase : integer;
     begin
         for i in 0 to 255 loop
-            -- Simple sine approximation: creates roughly 440 Hz at 48kHz sample rate
-            phase := (i * 28) mod 256;  -- Scale for ~440 Hz
+            phase := (i * 28) mod 256;
             if phase < 64 then
                 samples(i) := std_logic_vector(to_signed(phase * 512, 16));
             elsif phase < 128 then
@@ -82,13 +97,12 @@ architecture rtl of audio_top is
         return samples;
     end function;
     
-    -- Generate 523 Hz tone (C5 note)
     function generate_sine_523hz return sample_array is
         variable samples : sample_array;
         variable phase : integer;
     begin
         for i in 0 to 255 loop
-            phase := (i * 33) mod 256;  -- Scale for ~523 Hz
+            phase := (i * 33) mod 256;
             if phase < 64 then
                 samples(i) := std_logic_vector(to_signed(phase * 512, 16));
             elsif phase < 128 then
@@ -102,13 +116,12 @@ architecture rtl of audio_top is
         return samples;
     end function;
     
-    -- Generate 659 Hz tone (E5 note)
     function generate_sine_659hz return sample_array is
         variable samples : sample_array;
         variable phase : integer;
     begin
         for i in 0 to 255 loop
-            phase := (i * 42) mod 256;  -- Scale for ~659 Hz
+            phase := (i * 42) mod 256;
             if phase < 64 then
                 samples(i) := std_logic_vector(to_signed(phase * 512, 16));
             elsif phase < 128 then
@@ -122,13 +135,12 @@ architecture rtl of audio_top is
         return samples;
     end function;
     
-    -- Generate 784 Hz tone (G5 note)
     function generate_sine_784hz return sample_array is
         variable samples : sample_array;
         variable phase : integer;
     begin
         for i in 0 to 255 loop
-            phase := (i * 50) mod 256;  -- Scale for ~784 Hz
+            phase := (i * 50) mod 256;
             if phase < 64 then
                 samples(i) := std_logic_vector(to_signed(phase * 512, 16));
             elsif phase < 128 then
@@ -142,15 +154,10 @@ architecture rtl of audio_top is
         return samples;
     end function;
     
-    -- Create the tone lookup tables
-    constant TONE_0 : sample_array := generate_sine_440hz;  -- A4
-    constant TONE_1 : sample_array := generate_sine_523hz;  -- C5
-    constant TONE_2 : sample_array := generate_sine_659hz;  -- E5
-    constant TONE_3 : sample_array := generate_sine_784hz;  -- G5
-    
-    -------------------------------------------------------------------------
-    -- Component Declarations
-    -------------------------------------------------------------------------
+    constant TONE_0 : sample_array := generate_sine_440hz;
+    constant TONE_1 : sample_array := generate_sine_523hz;
+    constant TONE_2 : sample_array := generate_sine_659hz;
+    constant TONE_3 : sample_array := generate_sine_784hz;
     
     component codec_config is
         port (
@@ -187,7 +194,7 @@ architecture rtl of audio_top is
             enable    : in  std_logic;
             sample_l  : in  std_logic_vector(15 downto 0);
             sample_r  : in  std_logic_vector(15 downto 0);
-				sample_request : out std_logic;
+            sample_request : out std_logic;
             i2s_bclk  : out std_logic;
             i2s_lrck  : out std_logic;
             i2s_sdata : out std_logic
@@ -195,16 +202,37 @@ architecture rtl of audio_top is
     end component;
 
 begin
+    reset_n <= SW(0);
+    start_config <= '1';
     
-    -- Reset is active-low, use SW(0) or create from switch
-    reset_n <= SW(0);  
+    -- Convert LFSR to random tone (0-3)
+    random_tone <= to_integer(unsigned(lfsr(1 downto 0)));
     
-    -- Auto-start configuration after reset
-    start_config <= '1';  -- Always try to configure
+    -- Debug outputs on LEDs
+    LEDR(0) <= '1' when game_state = GENERATE_SEQ else '0';
+    LEDR(1) <= '1' when game_state = PLAY_SEQ else '0';
+    LEDR(2) <= '1' when game_state = WAIT_USER else '0';
+    LEDR(3) <= '1' when game_state = WIN else '0';
+    LEDR(4) <= '1' when game_state = LOSE else '0';
+    LEDR(5) <= '1' when selected_tone /= TONE_NONE else '0';
+    LEDR(6) <= key_pressed(0);
+    LEDR(7) <= key_pressed(1);
+    LEDR(8) <= key_pressed(2);
     
     -------------------------------------------------------------------------
-    -- 12 MHz Clock Generation for Codec Master Clock
-    -- Simple divide-by-4 from 50 MHz (gives 12.5 MHz, close enough)
+    -- LFSR Random Number Generator
+    -------------------------------------------------------------------------
+    process(CLOCK_50, reset_n)
+    begin
+        if reset_n = '0' then
+            lfsr <= "10101010";
+        elsif rising_edge(CLOCK_50) then
+            lfsr <= lfsr(6 downto 0) & (lfsr(7) xor lfsr(5) xor lfsr(4) xor lfsr(3));
+        end if;
+    end process;
+    
+    -------------------------------------------------------------------------
+    -- 12 MHz Clock Generation
     -------------------------------------------------------------------------
     process(CLOCK_50, reset_n)
     begin
@@ -221,71 +249,186 @@ begin
         end if;
     end process;
     
-    AUD_XCK <= clock_12;  -- Master clock to codec
+    AUD_XCK <= clock_12;
     
     -------------------------------------------------------------------------
-    -- Button Press Detection (Simple Edge Detection)
+    -- Game State Machine - Starts immediately when SW(0) = '1'
     -------------------------------------------------------------------------
-    process(CLOCK_50, reset_n)
+    process(clock_12, reset_n)
     begin
         if reset_n = '0' then
-            key_prev    <= (others => '1');
+            -- Reset to start state (GENERATE_SEQ, not IDLE)
+            game_state <= GENERATE_SEQ;
+            sequence_length <= 1;
+            current_index <= 0;
+            user_index <= 0;
+            key_prev <= (others => '1');
             key_pressed <= (others => '0');
-            selected_tone <= 0;
-        elsif rising_edge(CLOCK_50) then
+            selected_tone <= TONE_NONE;
+            beep_counter <= 0;
+            pause_counter <= 0;
+            beep_playing <= '0';
+            in_pause <= '0';
+            wrong_button <= '0';
+            
+        elsif rising_edge(clock_12) then
+            -- Button edge detection (always active)
             key_prev <= KEY;
+            key_pressed(0) <= (not KEY(0)) and key_prev(0);
+            key_pressed(1) <= (not KEY(1)) and key_prev(1);
+            key_pressed(2) <= (not KEY(2)) and key_prev(2);
+            key_pressed(3) <= (not KEY(3)) and key_prev(3);
             
-            -- Detect button press (high-to-low transition, since buttons are active low)
-            key_pressed(0) <= (not KEY(0)) and key_prev(1);
-            key_pressed(1) <= (not KEY(1)) and key_prev(2);
-            key_pressed(2) <= (not KEY(2)) and key_prev(3);
-            key_pressed(3) <= (not KEY(3));
-            
-            -- Select tone based on button press
-            if key_pressed(0) = '1' then
-                selected_tone <= 0;  -- 440 Hz
-            elsif key_pressed(1) = '1' then
-                selected_tone <= 1;  -- 523 Hz
-            elsif key_pressed(2) = '1' then
-                selected_tone <= 2;  -- 659 Hz
-            elsif key_pressed(3) = '1' then
-                selected_tone <= 3;  -- 784 Hz
-            end if;
+            case game_state is
+                
+                when GENERATE_SEQ =>
+                    -- Add random tone to sequence
+                    game_sequence(sequence_length - 1) <= random_tone;
+                    game_state <= PLAY_SEQ;
+                    current_index <= 0;
+                    beep_playing <= '0';
+                    in_pause <= '0';
+                
+                when PLAY_SEQ =>
+                    if current_index < sequence_length then
+                        if beep_playing = '0' and in_pause = '0' then
+                            -- Start playing next tone
+                            selected_tone <= game_sequence(current_index);
+                            beep_playing <= '1';
+                            beep_counter <= 0;
+                        elsif beep_playing = '1' then
+                            -- Playing tone
+                            if beep_counter < 6_000_000 then  -- 0.5 sec at 12MHz
+                                beep_counter <= beep_counter + 1;
+                            else
+                                -- Done with tone, start pause
+                                selected_tone <= TONE_NONE;
+                                beep_playing <= '0';
+                                in_pause <= '1';
+                                pause_counter <= 0;
+                            end if;
+                        elsif in_pause = '1' then
+                            -- Pause between tones
+                            if pause_counter < 3_000_000 then  -- 0.25 sec
+                                pause_counter <= pause_counter + 1;
+                            else
+                                -- Move to next tone
+                                in_pause <= '0';
+                                current_index <= current_index + 1;
+                            end if;
+                        end if;
+                    else
+                        -- Done playing sequence
+                        game_state <= WAIT_USER;
+                        user_index <= 0;
+                        selected_tone <= TONE_NONE;
+                    end if;
+                
+                when WAIT_USER =>
+                    -- Handle beep playback for user input (runs continuously)
+                    if selected_tone /= TONE_NONE then
+                        if beep_counter < 3_000_000 then  -- Short beep
+                            beep_counter <= beep_counter + 1;
+                        else
+                            selected_tone <= TONE_NONE;
+                            -- After beep finishes, check what to do next
+                            if wrong_button = '1' then
+                                game_state <= LOSE;
+                                wrong_button <= '0';
+                            elsif user_index >= sequence_length then
+                                game_state <= WIN;
+                                pause_counter <= 0;  -- Reset pause counter for WIN state
+                            end if;
+                        end if;
+                    else
+                        -- Only accept new button presses when not playing a tone
+                        if user_index < sequence_length then
+                            -- Check button presses
+                            if key_pressed(0) = '1' then
+                                selected_tone <= 0;
+                                beep_counter <= 0;
+                                -- Check if correct BEFORE incrementing
+                                if game_sequence(user_index) = 0 then
+                                    user_index <= user_index + 1;
+                                    wrong_button <= '0';
+                                else
+                                    wrong_button <= '1';  -- Mark as wrong, but play sound first
+                                end if;
+                            elsif key_pressed(1) = '1' then
+                                selected_tone <= 1;
+                                beep_counter <= 0;
+                                if game_sequence(user_index) = 1 then
+                                    user_index <= user_index + 1;
+                                    wrong_button <= '0';
+                                else
+                                    wrong_button <= '1';
+                                end if;
+                            elsif key_pressed(2) = '1' then
+                                selected_tone <= 2;
+                                beep_counter <= 0;
+                                if game_sequence(user_index) = 2 then
+                                    user_index <= user_index + 1;
+                                    wrong_button <= '0';
+                                else
+                                    wrong_button <= '1';
+                                end if;
+                            elsif key_pressed(3) = '1' then
+                                selected_tone <= 3;
+                                beep_counter <= 0;
+                                if game_sequence(user_index) = 3 then
+                                    user_index <= user_index + 1;
+                                    wrong_button <= '0';
+                                else
+                                    wrong_button <= '1';
+                                end if;
+                            end if;
+                        end if;
+                    end if;
+                
+                when WIN =>
+                    selected_tone <= TONE_NONE;
+                    if sequence_length < 16 then
+                        sequence_length <= sequence_length + 1;
+                    end if;
+						  if pause_counter >= 9_000_000 then
+								pause_counter <= pause_counter + 1;
+						  else
+								game_state <= GENERATE_SEQ;
+						  end if;
+                
+                when LOSE =>
+                    selected_tone <= TONE_NONE;
+                    -- Stay in LOSE state until SW(0) is toggled (reset)
+                    
+            end case;
         end if;
     end process;
     
     -------------------------------------------------------------------------
-    -- Sample Playback Logic
-    -- Reads samples from selected tone table and advances index
+    -- Sample Playback
     -------------------------------------------------------------------------
-    sample_playback : process(CLOCK_50, reset_n)
+    process(CLOCK_50, reset_n)
     begin
         if reset_n = '0' then
             sample_index  <= 0;
             audio_sample  <= (others => '0');
         elsif rising_edge(CLOCK_50) then
-			if sample_request = '1' then
-            -- Select current sample from chosen tone
-            case selected_tone is
-                when 0 => audio_sample <= TONE_0(sample_index);
-                when 1 => audio_sample <= TONE_1(sample_index);
-                when 2 => audio_sample <= TONE_2(sample_index);
-                when 3 => audio_sample <= TONE_3(sample_index);
-            end case;
-            
-            -- Advance sample index (loops back to 0 after 255)
-            -- This runs at 50 MHz, but I2S will only request new samples at 48 kHz
-            -- So we need to slow this down...
-            -- Actually, the I2S module will just keep reading whatever's here
-            -- We need to advance only when I2S needs a new sample
-            -- For now, let's just loop slowly for testing
-            
-            if sample_index = 255 then
-                sample_index <= 0;
-            else
-                sample_index <= sample_index + 1;
+            if sample_request = '1' then
+                case selected_tone is
+                    when 0 => audio_sample <= TONE_0(sample_index);
+                    when 1 => audio_sample <= TONE_1(sample_index);
+                    when 2 => audio_sample <= TONE_2(sample_index);
+                    when 3 => audio_sample <= TONE_3(sample_index);
+                    when 4 => audio_sample <= (others => '0');
+                    when others => audio_sample <= (others => '0');
+                end case;
+                
+                if sample_index = 255 then
+                    sample_index <= 0;
+                else
+                    sample_index <= sample_index + 1;
+                end if;
             end if;
-			end if;
         end if;
     end process;
     
@@ -293,7 +436,6 @@ begin
     -- Component Instantiations
     -------------------------------------------------------------------------
     
-    -- Codec configuration FSM
     cfg_inst : codec_config
         port map (
             clk_50        => CLOCK_50,
@@ -307,7 +449,6 @@ begin
             config_done   => config_done
         );
     
-    -- I2C master
     i2c_inst : i2c
         port map (
             i2c_clk_50    => CLOCK_50,
@@ -321,18 +462,17 @@ begin
             i2c_done      => i2c_done
         );
     
-    -- I2S transmitter
     i2s_inst : i2s_tx
         port map (
             clk_50    => CLOCK_50,
             reset_n   => reset_n,
-            enable    => config_done,  -- Start transmitting after config is done
-            sample_l  => audio_sample, -- Mono: same sample to both channels
+            enable    => config_done,
+            sample_l  => audio_sample,
             sample_r  => audio_sample,
             i2s_bclk  => AUD_BCLK,
             i2s_lrck  => AUD_DACLRCK,
             i2s_sdata => AUD_DACDAT,
-				sample_request => sample_request
+            sample_request => sample_request
         );
-
+        
 end rtl;
