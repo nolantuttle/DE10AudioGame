@@ -86,6 +86,10 @@
 				{
 					"name" : "KEY[3]",
 					"strict" : false
+				},
+				{
+					"name" : "UART_RX",
+					"strict" : false
 				}
 			]
 		}
