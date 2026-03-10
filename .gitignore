@@ -1,6 +1,11 @@
 # Freakin Mac users
 *.DS_Store
 
+# draw.io files
+*.drawio
+
+# Word files
+*.docx
 
 # ignore Quartus II generated folders
 *_sim
